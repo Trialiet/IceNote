@@ -18,6 +18,7 @@ import java.util.List;
 public class ListActivity extends Activity {
     private String loginUsername;
     private List<Note> noteList = new ArrayList<Note>();
+    boolean isLoaded = false;
     ListView listView;
     ArrayAdapter<Note> adapter;
     @Override
@@ -45,9 +46,12 @@ public class ListActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        //initNote();
-        //listView.setAdapter(adapter);
-        //listView.invalidate();
+        if (isLoaded){
+            initNote();
+            listView.setAdapter(adapter);
+            listView.invalidate();
+        }
+        isLoaded = true;
     }
 
     @Override
@@ -66,7 +70,10 @@ public class ListActivity extends Activity {
         DBAdapter dbAdapter = new DBAdapter(ListActivity.this, loginUsername);
         dbAdapter.open();
         noteList = dbAdapter.getAllNotes();
-        adapter = new ArrayAdapter<Note>(ListActivity.this,android.R.layout.simple_list_item_1, noteList);
+	 if (noteList == null){
+		noteList.add(new Note("Test Title", "Test Content"));
+ 	 }
+        adapter = new ArrayAdapter<Note>(ListActivity.this, android.R.layout.simple_list_item_1, noteList);
         dbAdapter.close();
     }
 

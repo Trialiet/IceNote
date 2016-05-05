@@ -79,6 +79,10 @@ public class DBAdapter{
         String title, content;
         long id;
         Cursor cursor = db.query(DATABASE_TABLE_NAME, new String[]{KEY_ID, KEY_TITLE, KEY_CONTENT}, null, null, null, null, null);
+	 if (cursor.moveToNext() == false){
+	     return null;
+	 }
+	 else
         while (cursor.moveToNext() != false){
             title = cursor.getString(cursor.getColumnIndex("title"));
             content = cursor.getString(cursor.getColumnIndex("content"));
