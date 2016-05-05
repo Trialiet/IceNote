@@ -55,8 +55,8 @@ public class NoteActivity extends Activity {
         if (id == R.id.save_note) {
             DBAdapter dbAdapter = new DBAdapter(NoteActivity.this, null);
             dbAdapter.open();
-            String noteTitle = note.getTitle();
-            String noteContent = note.getContent();
+            String noteTitle = title.getText().toString();
+            String noteContent = content.getText().toString();
             if (note == null){
                 dbAdapter.insert(noteTitle, noteContent);
             }

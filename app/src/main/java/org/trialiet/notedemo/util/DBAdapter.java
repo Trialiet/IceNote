@@ -74,11 +74,19 @@ public class DBAdapter{
         return db.delete(DATABASE_TABLE_NAME, KEY_ID + "=" + id, null) > 0;
     }
 
+    public boolean delete(long id){
+        return db.delete(DATABASE_TABLE_NAME, KEY_ID + "=" + id, null) > 0;
+    }
+
     public List<Note> getAllNotes(){
         List<Note> list = new ArrayList<Note>();
         String title, content;
         long id;
         Cursor cursor = db.query(DATABASE_TABLE_NAME, new String[]{KEY_ID, KEY_TITLE, KEY_CONTENT}, null, null, null, null, null);
+	 if (cursor.moveToNext() == false){
+	     return null;
+	 }
+	 else
         while (cursor.moveToNext() != false){
             title = cursor.getString(cursor.getColumnIndex("title"));
             content = cursor.getString(cursor.getColumnIndex("content"));
