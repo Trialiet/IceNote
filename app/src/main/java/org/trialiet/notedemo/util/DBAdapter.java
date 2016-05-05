@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +15,15 @@ import java.util.List;
  * Created by Trialiet on 2016/4/27.
  */
 public class DBAdapter{
-    static String CREATE_TABLE;
-    static final String KEY_TITLE = "title";
-    static final String KEY_CONTENT = "content";
-    static final String KEY_ID = "_id";
-    static final String DATABASE_NAME = "IceNoteDB";
-    static String DATABASE_TABLE_NAME;
-    final Context context;
-    DatabaseHelper DBHelper;
-    SQLiteDatabase db;
+    private static String CREATE_TABLE;
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_CONTENT = "content";
+    private static final String KEY_ID = "_id";
+    private static final String DATABASE_NAME = "IceNoteDB";
+    private static String DATABASE_TABLE_NAME = "null";
+    private final Context context;
+    private DatabaseHelper DBHelper;
+    private SQLiteDatabase db;
 
     public DBAdapter(Context ctx, String username){
         this.context = ctx;
@@ -74,25 +75,22 @@ public class DBAdapter{
         return db.delete(DATABASE_TABLE_NAME, KEY_ID + "=" + id, null) > 0;
     }
 
-    public boolean delete(long id){
-        return db.delete(DATABASE_TABLE_NAME, KEY_ID + "=" + id, null) > 0;
-    }
-
     public List<Note> getAllNotes(){
-        List<Note> list = new ArrayList<Note>();
+        List<Note> list = new ArrayList<>();
         String title, content;
         long id;
+        //Exception: DATABASE_TABLE_NAME is null, expect final variable
         Cursor cursor = db.query(DATABASE_TABLE_NAME, new String[]{KEY_ID, KEY_TITLE, KEY_CONTENT}, null, null, null, null, null);
-	 if (cursor.moveToNext() == false){
-	     return null;
-	 }
-	 else
-        while (cursor.moveToNext() != false){
+        if (!cursor.moveToFirst()) {
+            return null;
+        } else
+            do {
             title = cursor.getString(cursor.getColumnIndex("title"));
             content = cursor.getString(cursor.getColumnIndex("content"));
             id = cursor.getInt(cursor.getColumnIndex("_id"));
+                Log.d("test", title);
             list.add(new Note(id, title, content));
-        }
+            } while (cursor.moveToNext());
         cursor.close();
         return list;
     }

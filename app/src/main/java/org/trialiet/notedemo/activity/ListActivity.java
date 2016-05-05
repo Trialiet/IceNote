@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.trialiet.notedemo.R;
-import org.trialiet.notedemo.adapter.NoteAdapter;
 import org.trialiet.notedemo.util.DBAdapter;
 import org.trialiet.notedemo.util.Note;
 
@@ -17,10 +16,10 @@ import java.util.List;
 
 public class ListActivity extends Activity {
     private String loginUsername;
-    private List<Note> noteList = new ArrayList<Note>();
-    ListView listView;
-    boolean isLoaded = false;
-    ArrayAdapter<Note> adapter;
+    private List<Note> noteList = new ArrayList<>();
+    private ListView listView;
+    private boolean isLoaded = false;
+    private ArrayAdapter<Note> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,16 +63,15 @@ public class ListActivity extends Activity {
 
 
     public void initNote(){
-        if (loginUsername == null){
-            loginUsername = "admin";
-        }
         DBAdapter dbAdapter = new DBAdapter(ListActivity.this, loginUsername);
         dbAdapter.open();
         noteList = dbAdapter.getAllNotes();
 	 if (noteList == null){
-		noteList.add(new Note("Test Title", "Test Content"));
- 	 }
-        adapter = new ArrayAdapter<Note>(ListActivity.this, android.R.layout.simple_list_item_1, noteList);
+         noteList = new ArrayList<>();
+         dbAdapter.insert("Test Title", "Test Content");
+         noteList = dbAdapter.getAllNotes();
+     }
+        adapter = new ArrayAdapter<>(ListActivity.this, android.R.layout.simple_list_item_1, noteList);
         dbAdapter.close();
     }
 

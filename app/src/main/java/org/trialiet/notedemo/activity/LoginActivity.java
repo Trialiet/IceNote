@@ -54,43 +54,5 @@ public class LoginActivity extends Activity {
             }
         });
     }
-
-    public void LoginHandle(String username, String passwd){
-        new Thread(new Runnable(){
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                Map<String, String> data = new HashMap<String, String>();
-                data.put("username", loginUsername);
-                data.put("passwd", loginPassword);
-                String encode = "UTF-8";
-                int result = HttpUtils.sendMessage(data, encode);
-                result = 1;	//???????????
-                Looper.prepare();
-                if (result == 1){
-                    Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, ListActivity.class);
-                    intent.putExtra("username", loginUsername);
-                    LoginActivity.this.startActivity(intent);
-                }
-                else if (result == 0){
-                    Toast.makeText(LoginActivity.this, "Wrong", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Exception", Toast.LENGTH_SHORT).show();
-                }
-                Looper.loop();
-                handler.sendEmptyMessage(0);
-            }
-
-        }).start();
-    }
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            super.handleMessage(msg);
-        }
-    };
 }
 
